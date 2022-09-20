@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SMSController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', [SMSController::class, 'index'])->name('/');
+Route::get('/about', [SMSController::class, 'about'])->name('about');
+Route::get('/course', [SMSController::class, 'course'])->name('course');
+Route::get('/contact', [SMSController::class, 'contact'])->name('contact');
+Route::get('/student-login', [SMSController::class, 'studentLogin'])->name('student.login');
+Route::get('/student-register', [SMSController::class, 'studentRegister'])->name('student.register');
