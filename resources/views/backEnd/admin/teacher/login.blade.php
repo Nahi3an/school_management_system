@@ -17,7 +17,7 @@
     <!-- loader-->
     <link href="{{ asset('adminAsset') }}/assets/css/pace.min.css" rel="stylesheet" />
 
-    <title>Admin Login</title>
+    <title>Teacher Login</title>
 </head>
 
 <body>
@@ -37,20 +37,22 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="card-body p-4 p-sm-5">
-                                    <h5 class="card-title">Sign In</h5>
-                                    <form class="form-body" method="POST" action="{{ route('login') }}">
+                                    <h6 class="text-danger">{{ session('message') }}</h6>
+                                    <h5 class="card-title">Teacher Login</h5>
+                                    <form class="form-body" method="POST" action="{{ route('teacher.login') }}">
                                         @csrf
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label for="inputEmailAddress" class="form-label">Email Address</label>
+                                                <label for="inputEmailAddress" class="form-label">Enter Email / Phone
+                                                    Number</label>
                                                 <div class="ms-auto position-relative">
                                                     <div
                                                         class="position-absolute top-50 translate-middle-y search-icon px-3">
                                                         <i class="bi bi-envelope-fill"></i>
                                                     </div>
-                                                    <input type="email" class="form-control radius-30 ps-5"
-                                                        id="inputEmailAddress" placeholder="Email Address"
-                                                        name="email">
+                                                    <input type="text" class="form-control radius-30 ps-5"
+                                                        id="inputEmailAddress" placeholder="Email / Phone"
+                                                        name="user_name">
                                                 </div>
                                             </div>
                                             <div class="col-12">

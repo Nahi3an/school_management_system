@@ -104,12 +104,16 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item" href="authentication-signup-with-header-footer.html">
+                            <a class="dropdown-item" href="#"
+                                onclick="event.preventDefault(); document.getElementById('logOutForm').submit()">
                                 <div class="d-flex align-items-center">
                                     <div class="setting-icon"><i class="bi bi-lock-fill"></i></div>
                                     <div class="setting-text ms-3"><span>Logout</span></div>
                                 </div>
                             </a>
+                            <form action="{{ route('logout') }}" method="POST" id="logOutForm">
+                                @csrf
+                            </form>
                         </li>
                     </ul>
                 </li>

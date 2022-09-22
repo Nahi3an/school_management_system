@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Teacher;
+use Session;
 
 class TeacherController extends Controller
 {
     //
-    public $teacher, $image, $imageName, $imageDirectory, $imageUrl, $allTeachers;
+    public $teacher, $image, $imageName, $imageDirectory, $imageUrl, $allTeachers, $teacherInfo;
     public function index()
     {
 
@@ -88,5 +89,48 @@ class TeacherController extends Controller
         $this->teacher->save();
 
         return redirect('/all-teacher')->with('message', 'Teacher Information Updated!');
+    }
+
+    public function showTeacherLogin()
+    {
+
+        return view('backEnd.admin.teacher.login');
+    }
+
+    public function checkTeacherLogin(Request $request)
+    {
+
+        $this->teacherInfo = Teacher::where('email', $request->user_name)
+            ->orWhere('phone', $request->user_name)
+            ->first();
+
+        if ($this->teacherInfo) {
+
+            if (password_verify($request->password, $this->teacherInfo->password)) {
+
+                Session::put('teacherId', $this->teacherInfo->id);
+                Session::put('teacherName', $this->teacherInfo->name);
+
+                return redirect()->route('home');
+            } else {
+                return back()->with('message', 'Incorrect Password!');
+            }
+        } else {
+
+            return back()->with('message', 'Email or Phone Not Found!');
+        }
+    }
+
+    public function teacherLogout()
+    {
+        Session::forget('teacherId');
+        Session::forget('teacherName');
+
+        return redirect()->route('home');
+    }
+    public function showTeacherDashboard()
+    {
+
+        return view('backEnd.admin.teacher.dashboard');
     }
 }

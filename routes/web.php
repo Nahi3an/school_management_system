@@ -20,12 +20,19 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/', [SMSController::class, 'index'])->name('/');
+Route::get('/', [SMSController::class, 'index'])->name('home');
 Route::get('/about', [SMSController::class, 'about'])->name('about');
 Route::get('/course', [SMSController::class, 'course'])->name('course');
 Route::get('/contact', [SMSController::class, 'contact'])->name('contact');
 Route::get('/student-login', [SMSController::class, 'studentLogin'])->name('student.login');
 Route::get('/student-register', [SMSController::class, 'studentRegister'])->name('student.register');
+Route::get('/teacher-login', [TeacherController::class, 'showTeacherLogin'])->name('teacher.login');
+Route::post('/teacher-login', [TeacherController::class, 'checkTeacherLogin'])->name('teacher.login');
+Route::group(['middleware' => 'teacher.auth'], function () {
+
+    Route::get('/teacher-logout', [TeacherController::class, 'teacherLogout'])->name('teacher.logout');
+    Route::get('/teacher-dashboard', [TeacherController::class, 'showTeacherDashboard'])->name('teacher.dashboard');
+});
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
 

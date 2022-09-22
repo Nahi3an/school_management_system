@@ -34,7 +34,8 @@
                                     <form action="{{ route('delete.teacher') }}" method="POST">
                                         @csrf
                                         <input type="hidden" value="{{ $teacher->id }}" name="id">
-                                        <input type="submit" value="Delete" class="btn btn-sm btn-danger">
+                                        <input type="submit" value="Delete" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Delete This Record?')">
                                     </form>
                                 </td>
                             </tr>
