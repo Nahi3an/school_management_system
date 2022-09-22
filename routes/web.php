@@ -26,6 +26,7 @@ Route::get('/course', [SMSController::class, 'course'])->name('course');
 Route::get('/contact', [SMSController::class, 'contact'])->name('contact');
 Route::get('/student-login', [SMSController::class, 'studentLogin'])->name('student.login');
 Route::get('/student-register', [SMSController::class, 'studentRegister'])->name('student.register');
+
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
 
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
