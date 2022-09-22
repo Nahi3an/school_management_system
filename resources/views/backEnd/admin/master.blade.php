@@ -44,7 +44,7 @@
         <!--end top header-->
 
         <!--start sidebar -->
-        @include('backEnd.admin.include.leftSideBar')
+        @include('backEnd.admin.include.left-side-bar')
         <!--End sidebar -->
 
         <!--start content-->
@@ -63,7 +63,7 @@
         <!--End Back To Top Button-->
 
         <!--start switcher-->
-        @include('backEnd.admin.include.rightSideBar')
+        @include('backEnd.admin.include.right-side-bar')
         <!--end switcher-->
 
     </div>
