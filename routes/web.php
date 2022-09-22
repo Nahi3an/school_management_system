@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\SMSController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,8 @@ Route::group(['middleware' => 'teacher.auth'], function () {
 
     Route::get('/teacher-logout', [TeacherController::class, 'teacherLogout'])->name('teacher.logout');
     Route::get('/teacher-dashboard', [TeacherController::class, 'showTeacherDashboard'])->name('teacher.dashboard');
+    Route::get('/add-course', [CourseController::class, 'showAddCourse'])->name('add.course');
+    Route::get('/all-course', [CourseController::class, 'allCourses'])->name('all.course');
 });
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
