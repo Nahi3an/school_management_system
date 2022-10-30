@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{{ asset('adminAsset/assets') }}/images/favicon-32x32.png" type="image/png" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--plugins-->
     <link href="{{ asset('adminAsset/assets') }}/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
     <link href="{{ asset('adminAsset/assets') }}/plugins/perfect-scrollbar/css/perfect-scrollbar.css"
@@ -19,7 +20,8 @@
     <link href="{{ asset('adminAsset/assets') }}/css/style.css" rel="stylesheet" />
     <link href="{{ asset('adminAsset/assets') }}/css/icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('adminAsset/assets') }}/npm/bootstrap-icons%401.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet"
+        href="{{ asset('adminAsset/assets') }}/npm/bootstrap-icons%401.5.0/font/bootstrap-icons.css">
 
     <!-- loader-->
     <link href="{{ asset('adminAsset/assets') }}/css/pace.min.css" rel="stylesheet" />
@@ -91,7 +93,7 @@
         new PerfectScrollbar(".best-product")
         new PerfectScrollbar(".top-sellers-list")
     </script>
-
+    @yield('scripts')
 
 </body>
 

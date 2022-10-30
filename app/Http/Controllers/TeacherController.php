@@ -2,135 +2,169 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Teacher;
-use Session;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TeacherController extends Controller
 {
-    //
-    public $teacher, $image, $imageName, $imageDirectory, $imageUrl, $allTeachers, $teacherInfo;
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
+
+        $allTeachers = Teacher::all();
+
+        return response()->json([
+            'teachers' => $allTeachers
+        ]);
+
+        //return view('backEnd.admin.teacher.all-teacher');
+    }
+
+    public function showTeachers(){
+
+        $allTeachers = Teacher::all();
+
+        return response()->json([
+            'teachers' => $allTeachers
+        ]);
+
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
 
         return view('backEnd.admin.teacher.add-teacher');
     }
 
-    public function addNewTeacher(Request $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
-        $this->teacher = new Teacher();
-        $this->teacher->name = $request->name;
-        $this->teacher->phone = $request->phone;
-        $this->teacher->email = $request->email;
-        $this->teacher->password = bcrypt('12345678');
-        $this->teacher->address = $request->address;
-        $this->teacher->image = $this->saveImage($request);
+        //
+        $validator = Validator::make($request->all(), [
 
-        $this->teacher->save();
+            'name' => 'required|max:30|min:5|string',
+            'email' => 'required|min:5|email',
+            'phone' => 'required|string|max:11|min:11',
+            'address' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpg,png,jpeg',
+        ]);
 
-        return back()->with('message', 'Teacher Added!');
+        if ($validator->fails()) {
+
+            return response()->json(
+                [
+                    'status' => 400,
+                    'errors' =>  $validator->messages()
+                ]
+            );
+        } else {
+
+            Teacher::create([
+
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'image' => $this->saveImage($request)
+
+            ]);
+            // $data = $this->saveImage($request);
+            return response()->json(
+                [
+                    'status' => 200,
+                    'message' => "Teacher Added Successfully!"
+                ]
+            );
+        }
     }
-
     private function saveImage(Request $request)
     {
 
-        $this->image = $request->file('image');
-        $this->imageName = rand() . '.' . $this->image->getClientOriginalExtension();
-        $this->imageDirectory = 'adminAsset/teacherImage/';
-        $this->imageUrl = $this->imageDirectory . $this->imageName;
+        $image = $request->file('image');
+        $imageExt = $image->getClientOriginalExtension();
+        $imageName = rand() . '.' . $imageExt;
+        $imageDirectory = 'adminAsset/teacherImage/';
+        $imageUrl = $imageDirectory . '' . $imageName;
 
-        $this->image->move($this->imageDirectory, $this->imageName);
+        $image->move($imageDirectory, $imageName);
 
-        return $this->imageUrl;
+        return $imageUrl;
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Teacher  $teacher
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Teacher $teacher)
+    {
+        //
     }
 
-    public function allTeachers()
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Teacher  $teacher
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
-        $this->allTeachers = Teacher::all();
+        $teacher = Teacher::find($id);
 
-        return view('backEnd.admin.teacher.all-teacher', ['teachers' => $this->allTeachers]);
-    }
+        if($teacher){
+            return response()->json([
+                'status' => 200,
+                'teacher' => $teacher
+            ]);
 
-    public function editTeacher($id)
-    {
-        $this->teacher = Teacher::find($id);
-        return view('backEnd.admin.teacher.edit-teacher', ['teacher' => $this->teacher]);
-    }
+        }else{
 
-    public function deleteTeacher(Request $request)
-    {
-        $this->teacher = Teacher::find($request->id);
+            return response()->json([
+                'status' => 404,
+                'message' => "Teacher Not Found!"
+            ]);
 
-        if ($this->teacher->image) {
-            unlink($this->teacher->image);
         }
 
-        $this->teacher->delete();
 
-        return back()->with('message', 'Teacher Information Deleted');
     }
 
-    public function updateTeacher(Request $request)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Teacher  $teacher
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Teacher $teacher)
     {
-
-        $this->teacher = Teacher::find($request->id);
-        $this->teacher->name = $request->name;
-        $this->teacher->phone = $request->phone;
-        $this->teacher->email = $request->email;
-        $this->teacher->address = $request->address;
-        if ($request->file('image')) {
-            if ($this->teacher->image) {
-
-                unlink($this->teacher->image);
-            }
-            $this->teacher->image = $this->saveImage($request);
-        }
-
-        $this->teacher->save();
-
-        return redirect('/all-teacher')->with('message', 'Teacher Information Updated!');
+        //
     }
 
-    public function showTeacherLogin()
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Teacher  $teacher
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Teacher $teacher)
     {
-
-        return view('backEnd.admin.teacher.login');
-    }
-
-    public function checkTeacherLogin(Request $request)
-    {
-
-        $this->teacherInfo = Teacher::where('email', $request->user_name)
-            ->orWhere('phone', $request->user_name)
-            ->first();
-
-        if ($this->teacherInfo) {
-
-            if (password_verify($request->password, $this->teacherInfo->password)) {
-
-                Session::put('teacherId', $this->teacherInfo->id);
-                Session::put('teacherName', $this->teacherInfo->name);
-
-                return redirect()->route('home');
-            } else {
-                return back()->with('message', 'Incorrect Password!');
-            }
-        } else {
-
-            return back()->with('message', 'Email or Phone Not Found!');
-        }
-    }
-
-    public function teacherLogout()
-    {
-        Session::forget('teacherId');
-        Session::forget('teacherName');
-
-        return redirect()->route('home');
-    }
-    public function showTeacherDashboard()
-    {
-
-        return view('backEnd.admin.teacher.dashboard');
+        //
     }
 }

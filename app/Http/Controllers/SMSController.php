@@ -38,4 +38,10 @@ class SMSController extends Controller
 
         return view('frontEnd.student.register');
     }
+
+    public function showTeacherLogin()
+    {
+
+        return view('backEnd.admin.teacher.login');
+    }
 }

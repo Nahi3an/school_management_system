@@ -17,10 +17,19 @@
                             <th>Image</th>
                             <th>Action</th>
                         </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>A</td>
+                            <td>X</td>
+                            <td><img src="" alt="" style="height: 80px; width:80px"></td>
+                            <td>C</td>
+                            <td>C</td>
+                            <td></td>
+                        </tr>
                     </thead>
                     <tbody>
-                        @php $i = 1;@endphp
-                        @foreach ($teachers as $teacher)
+                        {{-- @php $i = 1;@endphp --}}
+                        {{-- @foreach ($teachers as $teacher)
                             <tr>
                                 <td>{{ $i++ }}</td>
                                 <td>{{ $teacher->name }}</td>
@@ -39,7 +48,7 @@
                                     </form>
                                 </td>
                             </tr>
-                        @endforeach
+                        @endforeach --}}
 
 
                     </tbody>
@@ -48,4 +57,29 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+
+            fetchTeachers();
+
+            function fetchTeachers() {
+
+                console.log("Hello");
+
+                $.ajax({
+                    type: "GET",
+                    url: "/teachers",
+                    dataType: "json",
+                    success: function(response) {
+
+                        console.log(response);
+                    }
+                });
+            }
+
+        });
+    </script>
 @endsection
