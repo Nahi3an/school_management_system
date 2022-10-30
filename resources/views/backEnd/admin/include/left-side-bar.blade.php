@@ -52,10 +52,10 @@
                         <small class="mb-0">Manage Teachers</small>
                     </div>
 
-                    <a href="{{ route('add.teacher') }}" class="list-group-item"><i class="bi bi-wallet"></i>Add
-                        Teacher</a>
-                    <a href="#allTeachers" class="list-group-item"><i class="bi bi-bar-chart-line"></i>All
-                        Teachers</a>
+                    <a href="{{ route('add.teacher') }}" class="list-group-item"><i class="bi bi-wallet"></i>
+                        Teacher Section</a>
+                    {{-- <a href="#allTeachers" class="list-group-item"><i class="bi bi-bar-chart-line"></i>All
+                        Teachers</a> --}}
 
                 </div>
             </div>

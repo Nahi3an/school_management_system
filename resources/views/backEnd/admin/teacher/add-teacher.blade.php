@@ -6,6 +6,11 @@
             <hr />
             <div class="card">
                 <div class="card-body">
+                    <div id="updateTeacherErrorCard">
+                        {{-- "<div class='alert border-0 bg-light-success alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-success'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-success'>Hello
+                            "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div> --}}
+
+                    </div>
                     <h5 class="text-success">{{ session('message') }}</h5>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
@@ -54,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <div id="addTeacher">
+        <div>
             <div class="col-xl-9 mx-auto">
                 <h3 class="text-success">{{ session('message') }}</h3>
                 <h6 class="mb-0 text-uppercase">Add Teacher</h6>
@@ -70,10 +75,11 @@
                                 </div>
                                 <hr />
                                 <div class="row mb-3">
-                                    <label for="inputEnterYourName" class="col-sm-3 col-form-label">Enter Your Name</label>
+                                    <label for="inputEnterYourName" class="col-sm-3 col-form-label">Enter Teacher
+                                        Name</label>
                                     <div class="col-sm-9">
                                         <input type="text" name="name" class="form-control"
-                                            placeholder="Enter Your Name">
+                                            placeholder="Enter Teacher Name">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -128,12 +134,11 @@
                     </div>
                     <div class="modal-body">
 
-                        <form id="editTeacher" method="POST" enctype="multipart/form-data">
-                            {{-- <div id="addTeacherErrorCard">
-                            </div> --}}
-                            <input type="hidden" name="id" id="teacherId">
+                        <form id="updateTeacherForm" method="POST" enctype="multipart/form-data">
+
                             <div id="editTeacherErrorCard">
                             </div>
+                            <input type="hidden" name="id" id="teacherId">
                             <div class="card" id="editTeacherCard">
                                 <div class="card-body">
                                     <div class="border p-4 rounded">
@@ -142,11 +147,11 @@
                                         </div>
                                         <hr />
                                         <div class="row mb-3">
-                                            <label for="inputEnterYourName" class="col-sm-3 col-form-label">Enter Your
+                                            <label for="inputEnterYourName" class="col-sm-3 col-form-label">Edit Teacher
                                                 Name</label>
                                             <div class="col-sm-9">
                                                 <input type="text" name="name" id="teacherName"
-                                                    class="form-control" placeholder="Enter Your Name">
+                                                    class="form-control" placeholder="Edit Teacher Name">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -175,14 +180,15 @@
                                             <label for="inputAddress4" class="col-sm-3 col-form-label">Profile
                                                 Picture:</label>
                                             <div class="col-sm-9">
-                                                <img src="" alt="" id="oldImage" style="height: 100px; width:100px">
+                                                <img src="" alt="" id="oldImage"
+                                                    style="height: 100px; width:100px">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
                                             <label for="inputAddress4" class="col-sm-3 col-form-label">Upload
                                                 Image:</label>
                                             <div class="col-sm-9">
-                                                <input type="file" name="image" id="teacherImage"
+                                                <input type="file" name="image" id="uploadImage"
                                                     class="form-control">
                                             </div>
                                         </div>
@@ -190,7 +196,7 @@
                                         <div class="row">
                                             <label class="col-sm-3 col-form-label"></label>
                                             <div class="col-sm-9">
-                                                <button type="submit" id="edit-teacher-btn"
+                                                <button type="submit" id="updateTeacherBtn"
                                                     class="btn btn-primary px-5">Save Changes</button>
                                                 <button type="button" class="btn btn-secondary"
                                                     data-bs-dismiss="modal">Close</button>
@@ -209,6 +215,26 @@
             </div>
         </div>
 
+        {{-- Delete Alert Modal --}}
+        {{-- <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#d">Danger
+            Modal</button> --}}
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-danger">
+                    <div class="modal-header">
+                        <input type="hidden" name="" id="deleteTeacherId">
+                        <h5 class="modal-title text-white">Are You Sure You Want To Delete?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-dark" id="finalTeacherDeleteBtn">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 @endsection
@@ -236,15 +262,15 @@
                             //imageUrl = item.image;
                             $("#teacherTable").append(
                                 '<tr>\
-                                                            <td>' + (key + 1) + '</td>\
-                                                            <td>' + item.name + '</td>\
-                                                            <td>' + item.phone + '</td>\
-                                                            <td>' + item.email + '</td>\
-                                                            <td>' + item.address + '</td>\
-                                                            <td><img src="../' + item.image + '" style="height:80px; width:80px; "></td>\
-                                                            <td><button value=' + item.id + ' type="button" class="edit-teacher-btn btn btn-sm btn-info">Edit</button></td>\
-                                                            <td> <button value=' + item.id + ' type="button" class="delete_btn btn btn-sm btn-danger">Delete</button></td>\
-                                                            </tr>');
+                                                        <td>' + (key + 1) + '</td>\
+                                                        <td>' + item.name + '</td>\
+                                                        <td>' + item.phone + '</td>\
+                                                        <td>' + item.email + '</td>\
+                                                        <td>' + item.address + '</td>\
+                                                        <td><img src="../' + item.image + '" style="height:80px; width:80px; "></td>\
+                                                        <td><button value=' + item.id + ' type="button" class="edit-teacher-btn btn btn-sm btn-info">Edit</button></td>\
+                                                        <td> <button value=' + item.id + ' type="button" class="deleteTeacherBtn btn btn-sm btn-danger">Delete</button></td>\
+                                                        </tr>');
 
                             //data-bs-toggle="modal" data-bs-target="#exampleModal"
                         });
@@ -320,7 +346,11 @@
 
             //edit teacher
             $(document).on('click', '.edit-teacher-btn', function(e) {
+
                 e.preventDefault();
+                $("#editTeacherErrorCard").html("");
+                //console.log();
+                $("#uploadImage").val("")
 
                 let teacherId = $(this).val();
                 // console.log(teacherId);
@@ -335,14 +365,12 @@
                         if (response.status == 200) {
 
                             $("#editTeacherCard").removeClass('d-none');
-                            $("#editTeacher").find("input").val("");
-                            $("#editTeacher").find("textarea").val("");
+
                             $("#teacherName").val(response.teacher.name);
                             $("#teacherEmail").val(response.teacher.email);
                             $("#teacherPhone").val(response.teacher.phone);
                             $("#teacherAddress").val(response.teacher.address);
-                            //$("#oldImage").src(response.teacher.image);
-                            $("#oldImage").attr("src", '../'+response.teacher.image);
+                            $("#oldImage").attr("src", '../' + response.teacher.image);
                             $("#teacherId").val(response.teacher.id);
 
                         } else {
@@ -360,6 +388,124 @@
                 });
 
 
+            });
+
+            //Update teacher
+            $(document).on('submit', '#updateTeacherForm', function(e) {
+
+                e.preventDefault();
+
+                let teacherId = $("#teacherId").val();
+                console.log("hello");
+
+                let editFormData = new FormData($("#updateTeacherForm")[0]);
+
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/teachers/update/" + teacherId,
+                    data: editFormData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+
+                        if (response.status == 200) {
+
+                            $("#editTeacherModal").modal('hide');
+                            $("#updateTeacherErrorCard").html("");
+                            $("#updateTeacherErrorCard").removeClass("card bg-success");
+                            $("#updateTeacherErrorCard").append(
+                                "<div class='alert border-0 bg-light-success alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-success'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-success'>" +
+                                response.message +
+                                "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
+                            );
+                            //alert(response.message);
+                            fetchTeachers();
+                        } else if (response.status == 400) {
+
+                            $("#editTeacherErrorCard").html("");
+                            $("#editTeacherErrorCard").addClass("card bg-danger");
+                            $("#editTeacherErrorCard").append(
+                                "<div id='editTeacherErrorCardBody' class='card-body'></div>"
+                            );
+                            $("#editTeacherErrorCardBody").append(
+                                "<ul id='editTeacherErrorList' class='list-group list-group-flush'></ul>"
+                            )
+
+                            $.each(response.errors, function(key, err_values) {
+                                $('#editTeacherErrorList').append(
+                                    "<li class='list-group-item bg-transparent text-white'>" +
+                                    err_values + '</li>')
+                            });
+
+                        } else {
+
+
+                        }
+                    }
+                });
+            });
+
+            //delete Modal
+            $(document).on('click', '.deleteTeacherBtn', function(e) {
+                e.preventDefault();
+
+                let teacherId = $(this).val();
+
+                $("#deleteModal").modal('show');
+                $("#deleteTeacherId").val(teacherId);
+
+               
+
+            });
+
+            //Delete final
+            $(document).on('click','#finalTeacherDeleteBtn', function(e) {
+
+                e.preventDefault();
+                $("#deleteModal").modal('hide');
+                let teacherId = $("#deleteTeacherId").val();
+                console.log(teacherId);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: "DELETE",
+                    url: "/teachers/delete/" + teacherId,
+                    success: function(response) {
+
+                        if (response.status == 200) {
+
+
+                            $("#updateTeacherErrorCard").html("");
+                            $("#updateTeacherErrorCard").removeClass("card bg-success");
+                            $("#updateTeacherErrorCard").append(
+                                "<div class='alert border-0 bg-light-danger alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-danger'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-danger'>" +
+                                response.message +
+                                "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
+                            );
+                            //alert(response.message);
+                            fetchTeachers();
+                        } else {
+
+                            $("#updateTeacherErrorCard").html("");
+                            $("#updateTeacherErrorCard").removeClass("card bg-success");
+                            $("#updateTeacherErrorCard").append(
+                                "<div class='alert border-0 bg-light-danger alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-danger'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-danger'>" +
+                                response.message +
+                                "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
+                            );
+                        }
+                    }
+                });
             });
 
         });

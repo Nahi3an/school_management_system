@@ -16,6 +16,7 @@ class TeacherController extends Controller
     public function index()
     {
 
+
         $allTeachers = Teacher::all();
 
         return response()->json([
@@ -25,14 +26,14 @@ class TeacherController extends Controller
         //return view('backEnd.admin.teacher.all-teacher');
     }
 
-    public function showTeachers(){
+    public function showTeachers()
+    {
 
         $allTeachers = Teacher::all();
 
         return response()->json([
             'teachers' => $allTeachers
         ]);
-
     }
 
     /**
@@ -96,6 +97,8 @@ class TeacherController extends Controller
     private function saveImage(Request $request)
     {
 
+
+
         $image = $request->file('image');
         $imageExt = $image->getClientOriginalExtension();
         $imageName = rand() . '.' . $imageExt;
@@ -127,22 +130,18 @@ class TeacherController extends Controller
     {
         $teacher = Teacher::find($id);
 
-        if($teacher){
+        if ($teacher) {
             return response()->json([
                 'status' => 200,
                 'teacher' => $teacher
             ]);
-
-        }else{
+        } else {
 
             return response()->json([
                 'status' => 404,
                 'message' => "Teacher Not Found!"
             ]);
-
         }
-
-
     }
 
     /**
@@ -152,9 +151,59 @@ class TeacherController extends Controller
      * @param  \App\Models\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Teacher $teacher)
+    public function update(Request $request, $id)
     {
         //
+        $validator = Validator::make($request->all(), [
+
+            'name' => 'required|max:30|min:5|string',
+            'email' => 'required|min:5|email',
+            'phone' => 'required|string|max:11|min:11',
+            'address' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->messages()
+            ]);
+        } else {
+
+            $teacher = Teacher::find($id);
+
+            if ($teacher) {
+
+                $updateImage = $teacher->image;
+
+                if ($request->file('image')) {
+
+                    unlink($teacher->image);
+                    $updateImage = $this->saveImage($request);
+                }
+
+                $teacher->update([
+
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'address' => $request->address,
+                    'image' => $updateImage
+
+                ]);
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Teacher Info Saved!'
+                ]);
+            } else {
+
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Teacher Not Found!'
+                ]);
+            }
+        }
     }
 
     /**
@@ -163,8 +212,30 @@ class TeacherController extends Controller
      * @param  \App\Models\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Teacher $teacher)
+    public function destroy(Teacher $teacher, $id)
     {
         //
+
+        $teacher = Teacher::find($id);
+
+        if ($teacher) {
+
+            if ($teacher->image) {
+
+                unlink($teacher->image);
+            }
+
+            $teacher->delete();
+            
+            return response()->json([
+                'status' => 200,
+                'message' => "Teacher Information Deleted"
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Teacher Not Found!'
+            ]);
+        }
     }
 }
