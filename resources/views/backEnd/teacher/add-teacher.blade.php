@@ -1,7 +1,7 @@
-@extends('backEnd.admin.master')
+@extends('backEnd.master')
 @section('content')
     <div class="row">
-        <div id="allTeachers">
+        <div id="allTeachersSection">
             <h6 class="mb-0 text-uppercase">All Teacher Information</h6>
             <hr />
             <div class="card">
@@ -22,6 +22,8 @@
                                     <th>Email</th>
                                     <th>Address</th>
                                     <th>Image</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
 
@@ -59,7 +61,7 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div id="addTeacherSection">
             <div class="col-xl-9 mx-auto">
                 <h3 class="text-success">{{ session('message') }}</h3>
                 <h6 class="mb-0 text-uppercase">Add Teacher</h6>
@@ -212,6 +214,7 @@
                         <button type="button" class="btn btn-primary">Save changes</button>
                     </div> --}}
                 </div>
+
             </div>
         </div>
 
@@ -260,17 +263,35 @@
                         //
                         $.each(response.teachers, function(key, item) {
                             //imageUrl = item.image;
+                            let status = "";
+                            let statusBtn = "";
+                            if (item.status == 1) {
+                                status = "Permited";
+                                statusBtn = "Restrict";
+                                btnClass = "btn-danger";
+                            } else {
+                                status = "Restricted";
+                                statusBtn = "Permit";
+                                btnClass = "btn-warning";
+
+                            }
+
                             $("#teacherTable").append(
                                 '<tr>\
-                                                        <td>' + (key + 1) + '</td>\
-                                                        <td>' + item.name + '</td>\
-                                                        <td>' + item.phone + '</td>\
-                                                        <td>' + item.email + '</td>\
-                                                        <td>' + item.address + '</td>\
-                                                        <td><img src="../' + item.image + '" style="height:80px; width:80px; "></td>\
-                                                        <td><button value=' + item.id + ' type="button" class="edit-teacher-btn btn btn-sm btn-info">Edit</button></td>\
-                                                        <td> <button value=' + item.id + ' type="button" class="deleteTeacherBtn btn btn-sm btn-danger">Delete</button></td>\
-                                                        </tr>');
+                                                    <td>' + (key + 1) + '</td>\
+                                                    <td>' + item.name + '</td>\
+                                                    <td>' + item.phone + '</td>\
+                                                    <td>' + item.email + '</td>\
+                                                    <td>' + item.address + '</td>\
+                                                    <td><img src="../' + item.image + '"style="height:80px; width:80px; "></td>\
+                                                    <td><b>' + status + '</b></td>\
+                                                    <td><button value=' + item.id +
+                                ' type="button" class="teacherStatusBtn btn btn-sm ' +
+                                btnClass + ' ">' +
+                                statusBtn + '</button></td>\
+                                                    <td><button value=' + item.id + ' type="button" class="edit-teacher-btn btn btn-sm btn-info">Edit</button></td>\
+                                                    <td> <button value=' + item.id + ' type="button" class="deleteTeacherBtn btn btn-sm btn-danger">Delete</button></td>\
+                                                </tr>');
 
                             //data-bs-toggle="modal" data-bs-target="#exampleModal"
                         });
@@ -343,17 +364,66 @@
                 });
             });
 
+            //Change Status
+            $(document).on('click', '.teacherStatusBtn', function(e) {
 
+                e.preventDefault();
+
+                let teacherId = $(this).val();
+                console.log(teacherId);
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/teachers/status/" + teacherId,
+                    success: function(response) {
+
+                        console.log(response);
+
+                        if (response.status == 200) {
+                            fetchTeachers();
+
+
+
+                            // $("#editTeacherCard").addClass('d-none');
+                            $("#updateTeacherErrorCard").html("");
+                            $("#updateTeacherErrorCard").removeClass("card bg-danger");
+                            $("#updateTeacherErrorCard").append(
+                                "<div class='alert border-0 bg-light-success alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-success'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-success'>" +
+                                response.message +
+                                "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
+                            );
+
+
+                        } else {
+
+                            $("#updateTeacherErrorCard").html("");
+                            $("#updateTeacherErrorCard").removeClass("card bg-danger");
+                            $("#updateTeacherErrorCard").append(
+                                "<div class='alert border-0 bg-light-danger alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-danger'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-danger'>" +
+                                response.message +
+                                "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
+                            );
+                        }
+                    }
+                });
+
+
+            });
             //edit teacher
             $(document).on('click', '.edit-teacher-btn', function(e) {
 
                 e.preventDefault();
                 $("#editTeacherErrorCard").html("");
-                //console.log();
+
                 $("#uploadImage").val("")
 
                 let teacherId = $(this).val();
-                // console.log(teacherId);
+
                 $("#editTeacherModal").modal('show');
 
                 $.ajax({
@@ -361,6 +431,8 @@
                     url: "/teachers/edit/" + teacherId,
 
                     success: function(response) {
+
+
 
                         if (response.status == 200) {
 
@@ -372,6 +444,8 @@
                             $("#teacherAddress").val(response.teacher.address);
                             $("#oldImage").attr("src", '../' + response.teacher.image);
                             $("#teacherId").val(response.teacher.id);
+
+
 
                         } else {
 
@@ -396,7 +470,7 @@
                 e.preventDefault();
 
                 let teacherId = $("#teacherId").val();
-                console.log("hello");
+                //console.log("hello");
 
                 let editFormData = new FormData($("#updateTeacherForm")[0]);
 
@@ -461,12 +535,12 @@
                 $("#deleteModal").modal('show');
                 $("#deleteTeacherId").val(teacherId);
 
-               
+
 
             });
 
             //Delete final
-            $(document).on('click','#finalTeacherDeleteBtn', function(e) {
+            $(document).on('click', '#finalTeacherDeleteBtn', function(e) {
 
                 e.preventDefault();
                 $("#deleteModal").modal('hide');

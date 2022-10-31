@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
+            $table->string('password');
             $table->string('phone');
             $table->text('address');
             $table->text('image');
+            $table->tinyInteger('status')->default('1');
             $table->timestamps();
         });
     }

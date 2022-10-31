@@ -15,21 +15,21 @@
                     <li><a class="nav-link" href="{{ route('about') }}">About</a></li>
                     <li><a class="nav-link" href="{{ route('course') }}">Courses</a></li>
                     <li><a class="nav-link" href="{{ route('contact') }}">Contact us</a></li>
+                    <li><a class="nav-link" href="{{ route('contact') }}">Register</a></li>
 
-                    {{-- <div class="dropdown">
-                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" id="dropdownMenuButton" style="color: black; text-transform:uppercase"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ Session::get('teacherName') }}
-                        </button>
+                            Login
+                        </a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li><a class="nav-link" href="#">Dashboard</a>
+                            <li><a class="nav-link" href="{{ route('teacher.login') }}">Teacher Login</a>
                             </li>
-                            <li><a class="nav-link" href="#">Logout</a></li>
-
+                            <li><a class="nav-link" href="{{ route('student.login') }}">Student Login</a></li>
                         </div>
                     </div>
 
-                    <div class="dropdown">
+                    {{-- <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Login

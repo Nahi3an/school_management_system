@@ -8,14 +8,8 @@ class CourseController extends Controller
 {
     //
 
-    public function allCourses()
-    {
-        return view('backEnd.admin.course.all-course');
-    }
+    public function create(){
 
-    public function showAddCourse()
-    {
-
-        return view('backEnd.admin.course.add-course');
+        return view('backEnd.course.add-course');
     }
 }

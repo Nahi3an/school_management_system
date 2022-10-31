@@ -32,16 +32,25 @@ class SMSController extends Controller
 
         return view('frontEnd.student.login');
     }
-
-    public function studentRegister()
+    public function teacherLogin()
     {
 
-        return view('frontEnd.student.register');
+        return view('frontEnd.teacher.login');
     }
 
-    public function showTeacherLogin()
-    {
+    public function teacherDashboard(){
 
-        return view('backEnd.admin.teacher.login');
+        return view('backEnd.teacher.home.home');
     }
+    // public function studentRegister()
+    // {
+
+    //     return view('frontEnd.student.register');
+    // }
+
+    // public function showTeacherLogin()
+    // {
+
+    //     return view('backEnd.admin.teacher.login');
+    // }
 }

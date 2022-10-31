@@ -37,22 +37,40 @@
                     <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#"
                         data-bs-toggle="dropdown">
                         <div class="user-setting d-flex align-items-center gap-1">
-                            <img src="{{ asset('adminAsset/assets') }}/images/avatars/avatar-1.png" class="user-img"
-                                alt="">
-                            <div class="user-name d-none d-sm-block">Jhon Deo</div>
+                            @if (Session::get('teacherId'))
+                                <img src="{{ asset(Session::get('teacherImage')) }}" class="user-img" alt="">
+                                <div class="user-name d-none d-sm-block">{{ Session::get('teacherName') }}</div>
+                            @else
+                                <img src="{{ asset('adminAsset/assets') }}/images/avatars/avatar-1.png" class="user-img"
+                                    alt="">
+                                <div class="user-name d-none d-sm-block">Jhon Deo</div>
+                            @endif
+
+
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
                             <a class="dropdown-item" href="#">
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ asset('adminAsset/assets') }}/images/avatars/avatar-1.png"
-                                        alt="" class="rounded-circle" width="60" height="60">
-                                    <div class="ms-3">
-                                        <h6 class="mb-0 dropdown-user-name">Jhon Deo</h6>
-                                        <small class="mb-0 dropdown-user-designation text-secondary">HR
-                                            Manager</small>
-                                    </div>
+
+                                    @if (Session::get('teacherId'))
+                                        <img src="{{ asset(Session::get('teacherImage')) }}" alt=""
+                                            class="rounded-circle" width="60" height="60">
+                                        <div class="ms-3">
+                                            <h6 class="mb-0 dropdown-user-name">{{ Session::get('teacherName') }}</h6>
+                                            <small class="mb-0 dropdown-user-designation text-secondary">Teacher</small>
+                                        </div>
+                                        {{-- <div class="user-name d-none d-sm-block">{{ Session::get('teacherName') }}</div> --}}
+                                    @else
+                                        <img src="{{ asset('adminAsset/assets') }}/images/avatars/avatar-1.png"
+                                            alt="" class="rounded-circle" width="60" height="60">
+                                        <div class="ms-3">
+                                            <h6 class="mb-0 dropdown-user-name">Jhon Deo</h6>
+                                            <small class="mb-0 dropdown-user-designation text-secondary">HR
+                                                Manager</small>
+                                        </div>
+                                    @endif
                                 </div>
                             </a>
                         </li>
@@ -66,7 +84,7 @@
                                     <div class="setting-text ms-3"><span>Profile</span></div>
                                 </div>
                             </a>
-                        </li>
+                            {{-- </li>
                         <li>
                             <a class="dropdown-item" href="#">
                                 <div class="d-flex align-items-center">
@@ -99,21 +117,36 @@
                                     <div class="setting-text ms-3"><span>Downloads</span></div>
                                 </div>
                             </a>
-                        </li>
+                        </li> --}}
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#"
-                                onclick="event.preventDefault(); document.getElementById('logOutForm').submit()">
-                                <div class="d-flex align-items-center">
-                                    <div class="setting-icon"><i class="bi bi-lock-fill"></i></div>
-                                    <div class="setting-text ms-3"><span>Logout</span></div>
-                                </div>
-                            </a>
-                            <form action="{{ route('logout') }}" method="POST" id="logOutForm">
-                                @csrf
-                            </form>
+                            @if (Session::get('teacherId'))
+                                <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="#"
+                                        onclick="event.preventDefault(); document.getElementById('logOutFormTeacher').submit()">
+                                        <div class="d-flex align-items-center">
+                                            <div class="setting-icon"><i class="bi bi-lock-fill"></i></div>
+                                            <div class="setting-text ms-3"><span>Teacher Logout</span></div>
+                                        </div>
+                                    </a>
+                                    <form action="{{ route('teacher.logout') }}" method="POST" id="logOutFormTeacher">
+                                        @csrf
+                                    </form>
+                                </a>
+                            @else
+                                <a class="dropdown-item" href="#"
+                                    onclick="event.preventDefault(); document.getElementById('logOutForm').submit()">
+                                    <div class="d-flex align-items-center">
+                                        <div class="setting-icon"><i class="bi bi-lock-fill"></i></div>
+                                        <div class="setting-text ms-3"><span>Logout</span></div>
+                                    </div>
+                                </a>
+                                <form action="{{ route('logout') }}" method="POST" id="logOutForm">
+                                    @csrf
+                                </form>
+                            @endif
                         </li>
                     </ul>
                 </li>

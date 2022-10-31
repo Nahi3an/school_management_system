@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
+use App\Models\Team;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Session;
 
 class TeacherController extends Controller
 {
@@ -13,6 +16,41 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+    public function checkTeacherLogin(Request $request)
+    {
+
+        $teacher = Teacher::where('email', '=', $request->email)->first();
+
+        if ($teacher) {
+
+            if (Hash::check($request->password, $teacher->password)) {
+
+                Session::put('teacherId', $teacher->id);
+                Session::put('teacherName', $teacher->name);
+                Session::put('teacherImage', $teacher->image);
+
+
+                return redirect()->route('teacher.dashboard');
+            } else {
+
+                return back()->with('message', 'Incorrect Credentials!');
+            }
+        } else {
+
+            return back()->with('message', 'No User Found!');
+        }
+    }
+
+    public function teacherLogout()
+    {
+
+        Session::forget('teacherId');
+        Session::forget('teacherName');
+
+        return redirect()->route('home');
+    }
     public function index()
     {
 
@@ -45,7 +83,7 @@ class TeacherController extends Controller
     {
         //
 
-        return view('backEnd.admin.teacher.add-teacher');
+        return view('backEnd.teacher.add-teacher');
     }
 
     /**
@@ -80,6 +118,7 @@ class TeacherController extends Controller
 
                 'name' => $request->name,
                 'email' => $request->email,
+                'password' => Hash::make('12345678'),
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'image' => $this->saveImage($request)
@@ -206,6 +245,39 @@ class TeacherController extends Controller
         }
     }
 
+    public function changeStatus($id)
+    {
+
+        $teacher = Teacher::find($id);
+
+        if ($teacher) {
+
+            if ($teacher->status == 1) {
+
+                $teacher->status = 0;
+            } else {
+                $teacher->status = 1;
+            }
+
+            $teacher->update();
+
+            $teacher = Teacher::find($id);
+
+            return response()->json([
+
+                'status' => 200,
+                'teacherStatus' => $teacher->status,
+                'message' => "Permission Changed"
+            ]);
+        } else {
+
+            return response()->json([
+
+                'status' => 404,
+                'message' => "Teacher Not Found!"
+            ]);
+        }
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -226,7 +298,7 @@ class TeacherController extends Controller
             }
 
             $teacher->delete();
-            
+
             return response()->json([
                 'status' => 200,
                 'message' => "Teacher Information Deleted"

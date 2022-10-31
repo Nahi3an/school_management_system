@@ -42,11 +42,11 @@
     <!--start wrapper-->
     <div class="wrapper">
         <!--start top header-->
-        @include('backEnd.admin.include.header')
+        @include('backEnd.include.header')
         <!--end top header-->
 
         <!--start sidebar -->
-        @include('backEnd.admin.include.left-side-bar')
+        @include('backEnd.include.left-side-bar')
         <!--End sidebar -->
 
         <!--start content-->
@@ -65,7 +65,7 @@
         <!--End Back To Top Button-->
 
         <!--start switcher-->
-        @include('backEnd.admin.include.right-side-bar')
+        @include('backEnd.include.right-side-bar')
         <!--end switcher-->
 
     </div>

@@ -1,25 +1,31 @@
 @extends('frontEnd.master')
 @section('title')
-    Login
+    Teacher Login
 @endsection
 @section('content')
     <div class="container">
         <div class="col-md-4 offset-md-4 login-form" style="margin-top:100px; margin-bottom:50px">
             <div class="heading_main text_align_center">
-                <h2><span>Student </span>Login</h2>
+                <h2><span>Teacher </span>Login</h2>
             </div>
-            <form>
+
+            <h3 class="text-danger text-ce">{{ session('message') }}</h3>
+
+            <form method="POST" action="{{ route('teacher.login') }}">
                 <!-- Email input -->
+                @csrf
                 <div class="form-outline mb-2">
                     <label class="form-label" for="form2Example1">Email address</label>
-                    <input type="email" id="form2Example1" class="form-control" placeholder="Enter Your Email" />
+                    <input type="email" id="form2Example1" class="form-control" name="email"
+                        placeholder="Enter Your Email" />
 
                 </div>
 
                 <!-- Password input -->
                 <div class="form-outline mb-2">
                     <label class="form-label" for="form2Example2">Password</label>
-                    <input type="password" id="form2Example2" class="form-control" placeholder="Enter Your Password" />
+                    <input type="password" id="form2Example2" class="form-control" name="password"
+                        placeholder="Enter Your Password" />
 
                 </div>
 
