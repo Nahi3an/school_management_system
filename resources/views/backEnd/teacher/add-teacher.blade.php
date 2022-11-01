@@ -386,9 +386,6 @@
 
                         if (response.status == 200) {
                             fetchTeachers();
-
-
-
                             // $("#editTeacherCard").addClass('d-none');
                             $("#updateTeacherErrorCard").html("");
                             $("#updateTeacherErrorCard").removeClass("card bg-danger");

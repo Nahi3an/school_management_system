@@ -20,8 +20,8 @@
                                     <th>Display Image</th>
                                     <th>Status</th>
                                     <th>Action</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
+                                    {{-- <th>Edit</th>
+                                    <th>Delete</th> --}}
 
                                 </tr>
 
@@ -57,13 +57,16 @@
                 </div>
             </div>
         </div>
+        {{-- Add Category Section --}}
+
         <div id="addCategorySection">
             <div class="col-xl-9 mx-auto">
 
                 <h6 class="mb-0 text-uppercase">Add Course Category</h6>
                 <hr />
-                <form id="addCategory" method="POST" enctype="multipart/form-data">
-                    <div id="addCategoryrErrorCard">
+                <form id="addCategoryForm" enctype="multipart/form-data">
+                    <div id="addCategoryErrorCard">
+
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -73,7 +76,7 @@
                                 </div>
                                 <hr />
                                 <div class="row mb-3">
-                                    <label for="inputEnterYourName" class="col-sm-3 col-form-label">Enter Category
+                                    <label for="inputEnterYourName" class="col-sm-3 col-form-label">Category
                                         Name</label>
                                     <div class="col-sm-9">
                                         <input type="text" name="category_name" class="form-control"
@@ -91,8 +94,8 @@
                                 <div class="row">
                                     <label class="col-sm-3 col-form-label"></label>
                                     <div class="col-sm-9">
-                                        <button type="submit" id="addCategoryBtn"
-                                            class="btn btn-primary px-5">Add Category</button>
+                                        <button type="submit" id="addCategoryBtn" class="btn btn-primary px-5">Add
+                                            Category</button>
                                     </div>
                                 </div>
                             </div>
@@ -102,6 +105,98 @@
             </div>
         </div>
 
+        {{-- Edit Category Section --}}
+
+        <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Category Information</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form id="updateCategoryForm" enctype="multipart/form-data">
+
+                            <div id="editCategoryErrorCard">
+                            </div>
+                            <input type="hidden" name="id" id="categoryId">
+                            <div class="card" id="editCategoryCard">
+                                <div class="card-body">
+                                    <div class="border p-4 rounded">
+                                        <div class="card-title d-flex align-items-center">
+                                            <h5 class="mb-0">Category Info Edit Form </h5>
+                                        </div>
+                                        <hr />
+                                        <div class="row mb-3">
+                                            <label for="inputEnterYourName" class="col-sm-3 col-form-label">Category
+                                                Name</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="categoryName" name="category_name"
+                                                    class="form-control" placeholder="Enter Category Name">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="inputAddress4" class="col-sm-3 col-form-label">Display Image</label>
+                                            <div class="col-sm-9">
+                                                <img src="" alt="" id="oldImage"
+                                                    style="height: 100px; width:100px">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="inputAddress4" class="col-sm-3 col-form-label">Upload Image:</label>
+                                            <div class="col-sm-9">
+                                                <input type="file" name="category_image" id="uploadImage"
+                                                    class="form-control">
+                                            </div>
+                                        </div>
+
+
+
+
+                                        <div class="row">
+                                            <label class="col-sm-3 col-form-label"></label>
+                                            <div class="col-sm-9">
+                                                <button type="submit" id="updateCategoryBtn"
+                                                    class="btn btn-primary px-5">Save Changes</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {{-- <div class="modal-footer">
+
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div> --}}
+                </div>
+
+            </div>
+        </div>
+
+        {{-- Delete Modal --}}
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-danger">
+                    <div class="modal-header">
+                        <input type="hidden" id="deleteCategoryId">
+                        <h5 class="modal-title text-white">Are You Sure You Want To Delete?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-dark" id="finalCategoryDeleteBtn">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
     </div>
@@ -109,67 +204,64 @@
 
 
 @section('scripts')
-    {{-- <script>
+    <script>
         $(document).ready(function() {
 
-            fetchTeachers();
 
-            function fetchTeachers() {
+            //All Category
+            fetchCategories();
 
-                //console.log("Hello");
+            function fetchCategories() {
 
                 $.ajax({
                     type: "GET",
-                    url: "/teachers",
+                    url: "/categories",
                     dataType: "json",
                     success: function(response) {
 
-                        $("#teacherTable").html("")
-                        //
-                        $.each(response.teachers, function(key, item) {
-                            //imageUrl = item.image;
-                            let status = "";
-                            let statusBtn = "";
-                            if (item.status == 1) {
-                                status = "Permited";
-                                statusBtn = "Restrict";
-                                btnClass = "btn-danger";
-                            } else {
-                                status = "Restricted";
-                                statusBtn = "Permit";
-                                btnClass = "btn-warning";
+                        if (response.status == 200) {
 
-                            }
+                            $('#categoryTable').html("");
 
-                            $("#teacherTable").append(
-                                '<tr>\
-                                                    <td>' + (key + 1) + '</td>\
-                                                    <td>' + item.name + '</td>\
-                                                    <td>' + item.phone + '</td>\
-                                                    <td>' + item.email + '</td>\
-                                                    <td>' + item.address + '</td>\
-                                                    <td><img src="../' + item.image + '"style="height:80px; width:80px; "></td>\
-                                                    <td><b>' + status + '</b></td>\
-                                                    <td><button value=' + item.id +
-                                ' type="button" class="teacherStatusBtn btn btn-sm ' +
-                                btnClass + ' ">' +
-                                statusBtn + '</button></td>\
-                                                    <td><button value=' + item.id + ' type="button" class="edit-teacher-btn btn btn-sm btn-info">Edit</button></td>\
-                                                    <td> <button value=' + item.id + ' type="button" class="deleteTeacherBtn btn btn-sm btn-danger">Delete</button></td>\
-                                                </tr>');
+                            $.each(response.categories, function(key, item) {
 
-                            //data-bs-toggle="modal" data-bs-target="#exampleModal"
-                        });
+                                let status = "";
+                                let statusBtn = "";
+                                if (item.status == 1) {
+                                    status = "Available";
+                                    btnClass = "btn-danger";
+                                } else {
+                                    status = "Unavaible";
+                                    btnClass = "btn-warning";
+
+                                }
+
+                                $("#categoryTable").append(
+                                    '<tr>\
+                                                                                            <td>' + (key + 1) + '</td>\
+                                                                                            <td>' + item.category_name + '</td>\
+                                                                                            <td><img src="../' + item
+                                    .category_image + '"style="height:80px; width:80px; "></td>\
+                                                                                            <td><b>' + status + '</b></td>\
+                                                                                            <td><button value=' + item.id +
+                                    ' type="button" class="categoryStatusBtn btn btn-sm ' +
+                                    btnClass + '">Change Status</button>\
+                                                                                            <button value=' + item.id + ' type="button" class="editCategoryBtn btn btn-sm btn-info">Edit</button>\
+                                                                                           <button value=' + item.id + ' type="button" class="deleteCategoryBtn btn btn-sm btn-danger">Delete</button></td>\
+                                                                                        </tr>');
+                            });
+
+                        }
                     }
                 });
             }
 
-            //Add Teacher
-            $(document).on('submit', '#addTeacher', function(e) {
+            //Add Category
+            $(document).on('submit', '#addCategoryForm', function(e) {
 
                 e.preventDefault();
 
-                let formData = new FormData($("#addTeacher")[0]);
+                let formData = new FormData($('#addCategoryForm')[0]);
 
                 $.ajaxSetup({
                     headers: {
@@ -179,64 +271,60 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/teachers/store",
+                    url: "/categories/store",
                     data: formData,
                     contentType: false,
                     processData: false,
                     success: function(response) {
 
+                        //console.log(response);
+
                         if (response.status == 200) {
 
-
-                            $("#addTeacherErrorCard").html("");
-                            $("#addTeacherErrorCard").removeClass("card bg-danger");
-                            $("#addTeacherErrorCard").append(
+                            $("#addCategoryErrorCard").html("");
+                            $("#addCategoryErrorCard").removeClass("card bg-danger");
+                            $("#addCategoryErrorCard").append(
                                 "<div class='alert border-0 bg-light-success alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-success'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-success'>" +
                                 response.message +
                                 "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
                             );
 
-                            //After submit Emptying input
-                            $("#addTeacher").find("input").val("");
-                            $("#addTeacher").find("textarea").val("");
-
-                            fetchTeachers();
-
-
+                            $("#addCategoryForm").find("input").val("");
+                            // $("#addCategory").find("textarea").val("");
 
                         } else {
 
 
-                            $("#addTeacherErrorCard").html("");
-                            $("#addTeacherErrorCard").addClass("card bg-danger");
-                            $("#addTeacherErrorCard").append(
-                                "<div id='addTeacherErrorCardBody' class='card-body'></div>"
+                            $("#addCategoryErrorCard").html("");
+                            $("#addCategoryErrorCard").addClass("card bg-danger");
+                            $("#addCategoryErrorCard").append(
+                                "<div id='addCategoryErrorCardBody' class='card-body'></div>"
                             );
-                            $("#addTeacherErrorCardBody").append(
-                                "<ul id='addTeacherErrorList' class='list-group list-group-flush'></ul>"
-                            )
 
+                            $("#addCategoryErrorCardBody").append(
+                                "<ul id='addCategoryErrorList' class='list-group list-group-flush'></ul>"
+                            );
 
-                            $.each(response.errors, function(key, err_values) {
-                                $('#addTeacherErrorList').append(
+                            $.each(response.errors, function(key, error) {
+                                $('#addCategoryErrorList').append(
                                     "<li class='list-group-item bg-transparent text-white'>" +
-                                    err_values + '</li>')
+                                    error + '</li>')
                             });
 
 
+
                         }
                     }
                 });
+
             });
 
             //Change Status
-            $(document).on('click', '.teacherStatusBtn', function(e) {
+            $(document).on('click', '.categoryStatusBtn', function() {
 
-                e.preventDefault();
+                let categoryId = $(this).val();
 
-                let teacherId = $(this).val();
-                console.log(teacherId);
-
+                //console.log(categoryId);
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -244,80 +332,67 @@
                 });
                 $.ajax({
                     type: "POST",
-                    url: "/teachers/status/" + teacherId,
+                    url: "/categories/status/" + categoryId,
+                    dataType: "json",
                     success: function(response) {
 
-                        console.log(response);
-
                         if (response.status == 200) {
-                            fetchTeachers();
-
-
-
-                            // $("#editTeacherCard").addClass('d-none');
-                            $("#updateTeacherErrorCard").html("");
-                            $("#updateTeacherErrorCard").removeClass("card bg-danger");
-                            $("#updateTeacherErrorCard").append(
+                            fetchCategories();
+                            $("#updateCategoryErrorCard").html("");
+                            // $("#updateCategoryErrorCard").removeClass("card bg-danger");
+                            $("#updateCategoryErrorCard").append(
                                 "<div class='alert border-0 bg-light-success alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-success'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-success'>" +
                                 response.message +
                                 "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
                             );
 
-
                         } else {
 
-                            $("#updateTeacherErrorCard").html("");
-                            $("#updateTeacherErrorCard").removeClass("card bg-danger");
-                            $("#updateTeacherErrorCard").append(
+                            $("#updateCategoryErrorCard").html("");
+                            //$("#updateCategoryErrorCard").removeClass("card bg-danger");
+                            $("#updateCategoryErrorCard").append(
                                 "<div class='alert border-0 bg-light-danger alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-danger'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-danger'>" +
                                 response.message +
                                 "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
                             );
+                            s
                         }
                     }
                 });
-
-
             });
-            //edit teacher
-            $(document).on('click', '.edit-teacher-btn', function(e) {
 
-                e.preventDefault();
-                $("#editTeacherErrorCard").html("");
+            //Edit Category
+            $(document).on('click', '.editCategoryBtn', function() {
 
-                $("#uploadImage").val("")
-
-                let teacherId = $(this).val();
-
-                $("#editTeacherModal").modal('show');
+                let categoryId = $(this).val();
+                $("#uploadImage").val("");
 
                 $.ajax({
                     type: "GET",
-                    url: "/teachers/edit/" + teacherId,
-
+                    url: "/categories/edit/" + categoryId,
+                    dataType: "json",
                     success: function(response) {
 
-
+                        //console.log(response);
+                        $('#editCategoryModal').modal('show');
 
                         if (response.status == 200) {
 
-                            $("#editTeacherCard").removeClass('d-none');
+                            $("#editCategoryCard").removeClass('d-none');
 
-                            $("#teacherName").val(response.teacher.name);
-                            $("#teacherEmail").val(response.teacher.email);
-                            $("#teacherPhone").val(response.teacher.phone);
-                            $("#teacherAddress").val(response.teacher.address);
-                            $("#oldImage").attr("src", '../' + response.teacher.image);
-                            $("#teacherId").val(response.teacher.id);
+                            $("#categoryName").val(response.category.category_name);
+                            $("#oldImage").attr("src", '../' + response.category
+                                .category_image);
+                            $("#categoryId").val(response.category.id);
 
 
 
                         } else {
 
-                            $("#editTeacherCard").addClass('d-none');
-                            $("#editTeacherErrorCard").html("");
-                            $("#editTeacherErrorCard").removeClass("card bg-danger");
-                            $("#editTeacherErrorCard").append(
+                            $("#editCategoryCard").addClass('d-none');
+                            $("#editCategoryErrorCard").html("");
+                            $("#editCategoryErrorCard").removeClass("card bg-danger");
+                            $("#editCategoryErrorCard").append(
                                 "<div class='alert border-0 bg-light-danger alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-danger'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-danger'>" +
                                 response.message +
                                 "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
@@ -325,20 +400,15 @@
                         }
                     }
                 });
-
-
             });
 
-            //Update teacher
-            $(document).on('submit', '#updateTeacherForm', function(e) {
+            //Update Category
+            $(document).on('submit', '#updateCategoryForm', function(e) {
 
                 e.preventDefault();
 
-                let teacherId = $("#teacherId").val();
-                //console.log("hello");
-
-                let editFormData = new FormData($("#updateTeacherForm")[0]);
-
+                let categoryId = $("#categoryId").val();
+                let formData = new FormData($('#updateCategoryForm')[0]);
 
                 $.ajaxSetup({
                     headers: {
@@ -347,97 +417,108 @@
                 });
 
                 $.ajax({
+
                     type: "POST",
-                    url: "/teachers/update/" + teacherId,
-                    data: editFormData,
+                    url: "/categories/update/" + categoryId,
+                    data: formData,
+                    dataType: 'json',
                     contentType: false,
                     processData: false,
                     success: function(response) {
 
+                        console.log(response);
                         if (response.status == 200) {
 
-                            $("#editTeacherModal").modal('hide');
-                            $("#updateTeacherErrorCard").html("");
-                            $("#updateTeacherErrorCard").removeClass("card bg-success");
-                            $("#updateTeacherErrorCard").append(
+                            $("#editCategoryModal").modal('hide');
+                            $("#updateCategoryErrorCard").html("");
+                            $("#updateCategoryErrorCard").removeClass("card bg-success");
+                            $("#updateCategoryErrorCard").append(
                                 "<div class='alert border-0 bg-light-success alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-success'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-success'>" +
                                 response.message +
                                 "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
                             );
-                            //alert(response.message);
-                            fetchTeachers();
+
+                            fetchCategories();
+
                         } else if (response.status == 400) {
 
-                            $("#editTeacherErrorCard").html("");
-                            $("#editTeacherErrorCard").addClass("card bg-danger");
-                            $("#editTeacherErrorCard").append(
-                                "<div id='editTeacherErrorCardBody' class='card-body'></div>"
+                            $("#editCategoryErrorCard").html("");
+                            $("#editCategoryErrorCard").addClass("card bg-danger");
+                            $("#editCategoryErrorCard").append(
+                                "<div id='editCategoryErrorCardBody' class='card-body'></div>"
                             );
-                            $("#editTeacherErrorCardBody").append(
-                                "<ul id='editTeacherErrorList' class='list-group list-group-flush'></ul>"
+                            $("#editCategoryErrorCardBody").append(
+                                "<ul id='editCategoryErrorList' class='list-group list-group-flush'></ul>"
                             )
 
                             $.each(response.errors, function(key, err_values) {
-                                $('#editTeacherErrorList').append(
+                                $('#editCategoryErrorList').append(
                                     "<li class='list-group-item bg-transparent text-white'>" +
                                     err_values + '</li>')
                             });
-
-                        } else {
-
-
                         }
                     }
                 });
+
+
+
             });
 
-            //delete Modal
-            $(document).on('click', '.deleteTeacherBtn', function(e) {
+            //Delete  Category Modal
+            $(document).on('click', '.deleteCategoryBtn', function(e) {
+
                 e.preventDefault();
 
-                let teacherId = $(this).val();
+                let categoryId = $(this).val();
 
                 $("#deleteModal").modal('show');
-                $("#deleteTeacherId").val(teacherId);
-
+                $("#deleteCategoryId").val(categoryId);
 
 
             });
 
-            //Delete final
-            $(document).on('click', '#finalTeacherDeleteBtn', function(e) {
+            //Delete Category Fianl
+
+            $(document).on('click', '#finalCategoryDeleteBtn', function(e) {
 
                 e.preventDefault();
-                $("#deleteModal").modal('hide');
-                let teacherId = $("#deleteTeacherId").val();
-                console.log(teacherId);
+
+                let categoryId = $("#deleteCategoryId").val();
+
+                //  console.log(categoryId);
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
+
                 $.ajax({
-                    type: "DELETE",
-                    url: "/teachers/delete/" + teacherId,
+
+                    type: "POST",
+                    url: "/categories/delete/" + categoryId,
+
                     success: function(response) {
 
+                        //console.log(response);
+                        $("#deleteModal").modal('hide');
                         if (response.status == 200) {
 
 
-                            $("#updateTeacherErrorCard").html("");
-                            $("#updateTeacherErrorCard").removeClass("card bg-success");
-                            $("#updateTeacherErrorCard").append(
+                            $("#updateCategoryErrorCard").html("");
+                            $("#updateCategoryErrorCard").removeClass("card bg-success");
+                            $("#updateCategoryErrorCard").append(
                                 "<div class='alert border-0 bg-light-danger alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-danger'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-danger'>" +
                                 response.message +
                                 "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
                             );
                             //alert(response.message);
-                            fetchTeachers();
+                            fetchCategories();
                         } else {
 
-                            $("#updateTeacherErrorCard").html("");
-                            $("#updateTeacherErrorCard").removeClass("card bg-success");
-                            $("#updateTeacherErrorCard").append(
+                            $("#updateCategoryErrorCard").html("");
+                            $("#updateCategoryErrorCard").removeClass("card bg-success");
+                            $("#updateCategoryErrorCard").append(
                                 "<div class='alert border-0 bg-light-danger alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-danger'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-danger'>" +
                                 response.message +
                                 "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
@@ -445,8 +526,12 @@
                         }
                     }
                 });
+
+
             });
 
+
+
         });
-    </script> --}}
+    </script>
 @endsection

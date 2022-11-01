@@ -46,6 +46,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
     //Category Control Functionalities
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('add.category');
+    Route::post('/categories/store',[CategoryController::class,'store'])->name('new.category');
+    Route::get('/categories',[CategoryController::class,'index'])->name('all.category');
+    Route::post('/categories/status/{id}', [CategoryController::class, 'changeStatus'])->name('change.status.category');
+    Route::get('/categories/edit/{id}',[CategoryController::class,'edit'])->name('edit.category');
+    Route::post('/categories/update/{id}', [CategoryController::class, 'update'])->name('update.category');
+    Route::post('/categories/delete/{id}', [CategoryController::class, 'destroy'])->name('delete.category');
 
 
     //Teacher Control Functionalities
