@@ -80,16 +80,26 @@
                                 <hr />
                                 <div class="row mb-3">
                                     <label for="inputEnterYourName" class="col-sm-3 col-form-label">Course Category
-                                        </label>
+                                    </label>
                                     <div class="col-sm-9">
                                         <select name="category_id" class="form-control">
-                                            <option value="">A</option>
-                                            <option value="">B</option>
-                                            <option value="">C</option>
+                                            @foreach ($categories as $category)
+                                                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                            @endforeach
 
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="row mb-3">
+                                    <label class="form-check-label col-sm-3 col-form-label" for="flexCheckDefault" >Default checkbox</label>
+
+                                    <div class="col-sm-9">
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    </div>
+                                </div>
+
                                 <div class="row mb-3">
                                     <label for="inputEnterYourName" class="col-sm-3 col-form-label">Course Title</label>
                                     <div class="col-sm-9">
@@ -108,7 +118,8 @@
                                 <div class="row mb-3">
                                     <label for="inputPhoneNo2" class="col-sm-3 col-form-label">Slug</label>
                                     <div class="col-sm-9">
-                                        <input type="text" name="slug" class="form-control" placeholder="Course Slug  (optional)">
+                                        <input type="text" name="slug" class="form-control"
+                                            placeholder="Course Slug  (optional)">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -128,8 +139,8 @@
                                 <div class="row">
                                     <label class="col-sm-3 col-form-label"></label>
                                     <div class="col-sm-9">
-                                        <button type="submit" id="addCourseBtn"
-                                            class="btn btn-primary px-5">Add Course</button>
+                                        <button type="submit" id="addCourseBtn" class="btn btn-primary px-5">Add
+                                            Course</button>
                                     </div>
                                 </div>
                             </div>

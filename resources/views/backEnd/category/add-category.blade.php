@@ -238,17 +238,17 @@
 
                                 $("#categoryTable").append(
                                     '<tr>\
-                                                                                            <td>' + (key + 1) + '</td>\
-                                                                                            <td>' + item.category_name + '</td>\
-                                                                                            <td><img src="../' + item
-                                    .category_image + '"style="height:80px; width:80px; "></td>\
-                                                                                            <td><b>' + status + '</b></td>\
-                                                                                            <td><button value=' + item.id +
-                                    ' type="button" class="categoryStatusBtn btn btn-sm ' +
-                                    btnClass + '">Change Status</button>\
-                                                                                            <button value=' + item.id + ' type="button" class="editCategoryBtn btn btn-sm btn-info">Edit</button>\
-                                                                                           <button value=' + item.id + ' type="button" class="deleteCategoryBtn btn btn-sm btn-danger">Delete</button></td>\
-                                                                                        </tr>');
+                                            <td>' + (key + 1) + '</td>\
+                                            <td>' + item.category_name + '</td>\
+                                            <td><img src="../' + item
+                                            .category_image + '"style="height:80px; width:80px; "></td>\
+                                            <td><b>' + status + '</b></td>\
+                                            <td><button value=' + item.id +
+                                            ' type="button" class="categoryStatusBtn btn btn-sm ' +
+                                            btnClass + '">Change Status</button>\
+                                            <button value=' + item.id + ' type="button" class="editCategoryBtn btn btn-sm btn-info">Edit</button>\
+                                            <button value=' + item.id + ' type="button" class="deleteCategoryBtn btn btn-sm btn-danger">Delete</button></td>\
+                                            </tr>');
                             });
 
                         }
@@ -290,6 +290,7 @@
                             );
 
                             $("#addCategoryForm").find("input").val("");
+                            fetchCategories();
                             // $("#addCategory").find("textarea").val("");
 
                         } else {

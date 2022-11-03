@@ -59,6 +59,8 @@
                             Teacher Section</a>
                         <a href="{{ route('add.category') }}" class="list-group-item"><i class="bi bi-wallet"></i>
                             Course Category </a>
+                        <a href="{{ route('add.tag') }}" class="list-group-item"><i class="bi bi-wallet"></i>
+                            Tag Section </a>
                         {{-- <a href="#allTeachers" class="list-group-item"><i class="bi bi-bar-chart-line"></i>All
                         Teachers</a> --}}
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\SMSController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,12 +45,26 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
+
+    //Tag Control Functionality
+    Route::controller(TagController::class)->group(function () {
+
+        Route::get('/tags/create', 'create')->name('add.tag');
+        Route::post('/tags/store', 'store')->name('new.tag');
+        Route::get('/tags', 'index')->name('all.tag');
+        Route::get('/tags/{tag}/edit', 'edit')->name('edit.tag');
+        Route::put('/tags/{tag}', 'update')->name('update.tag');
+        Route::delete('/tags/{tag}', 'destroy')->name('update.tag');
+
+    });
+
+
     //Category Control Functionalities
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('add.category');
-    Route::post('/categories/store',[CategoryController::class,'store'])->name('new.category');
-    Route::get('/categories',[CategoryController::class,'index'])->name('all.category');
+    Route::post('/categories/store', [CategoryController::class, 'store'])->name('new.category');
+    Route::get('/categories', [CategoryController::class, 'index'])->name('all.category');
     Route::post('/categories/status/{id}', [CategoryController::class, 'changeStatus'])->name('change.status.category');
-    Route::get('/categories/edit/{id}',[CategoryController::class,'edit'])->name('edit.category');
+    Route::get('/categories/edit/{id}', [CategoryController::class, 'edit'])->name('edit.category');
     Route::post('/categories/update/{id}', [CategoryController::class, 'update'])->name('update.category');
     Route::post('/categories/delete/{id}', [CategoryController::class, 'destroy'])->name('delete.category');
 
