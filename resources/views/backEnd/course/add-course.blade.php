@@ -66,9 +66,10 @@
         <div id="addCourseSection">
             <div class="col-xl-9 mx-auto">
 
-                <h6 class="mb-0 text-uppercase">Add Teacher</h6>
+                <h6 class="mb-0 text-uppercase">Add Course Information</h6>
                 <hr />
-                <form id="addCourse" method="POST" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('new.course') }}" enctype="multipart/form-data">
+                    @csrf
                     <div id="addCourseErrorCard">
                     </div>
                     <div class="card">
@@ -78,6 +79,8 @@
                                     <h5 class="mb-0">Course Registration Form </h5>
                                 </div>
                                 <hr />
+
+                                <input type="hidden" id="teacherId" name="teacher_id" value="{{ Session::get('teacherId') }}">
                                 <div class="row mb-3">
                                     <label for="inputEnterYourName" class="col-sm-3 col-form-label">Course Category
                                     </label>
@@ -92,11 +95,14 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="form-check-label col-sm-3 col-form-label" for="flexCheckDefault" >Default checkbox</label>
+                                    <label class="form-check-label col-sm-3 col-form-label" for="flexCheckDefault">Select Tags
+                                    </label>
 
                                     <div class="col-sm-9">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                        @foreach ($tags as $tag)
+                                            <input class="form-check-input" type="checkbox" value="{{ $tag->id }}"
+                                                 name="tag_names[]"><label class="form-check-label" >{{ $tag->tag_name }}</label>
+                                        @endforeach
                                     </div>
                                 </div>
 
@@ -149,5 +155,45 @@
                 </form>
             </div>
         </div>
+
+
     </div>
+@endsection
+
+@section('scripts')
+
+    <script>
+
+        $(document).ready(function () {
+
+            $(document).on('submit','#addCourseForm', function (e) {
+
+                e.preventDefault();
+
+                let formData = new FormData($("#addCourseForm")[0]);
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+
+                    type: "POST",
+                    url: "/courses/store",
+                    data: formData,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+
+                        console.log(response);
+                    }
+                });
+
+            });
+        });
+    </script>
+
 @endsection

@@ -8,10 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
     use HasFactory;
-    
+
     protected $table ='tags';
     protected $fillable = [
         'tag_name'
     ];
+
+
+    //Many to many
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_tag');
+    }
 
 }

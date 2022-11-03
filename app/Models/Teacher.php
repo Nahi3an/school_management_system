@@ -21,4 +21,10 @@ class Teacher extends Model
         'password'
     ];
 
+    //One to Many
+    public function courses(){
+
+        return $this->hasMany(Course::class);
+    }
+
 }

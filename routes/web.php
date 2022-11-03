@@ -37,7 +37,14 @@ Route::middleware(['teacher.auth'])->group(function () {
 
     Route::get('/teacher-dashboard', [SMSController::class, 'teacherDashboard'])->name('teacher.dashboard');
     Route::post('/teacher-logout', [TeacherController::class, 'teacherLogout'])->name('teacher.logout');
-    Route::get('/courses/create', [CourseController::class, 'create'])->name('add.course');
+
+    Route::controller(CourseController::class)->group(function () {
+
+        Route::get('/courses/create','create')->name('add.course');
+        Route::post('/courses/store','store')->name('new.course');
+
+
+    });
 });
 
 //Admin Restricted
@@ -55,7 +62,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/tags/{tag}/edit', 'edit')->name('edit.tag');
         Route::put('/tags/{tag}', 'update')->name('update.tag');
         Route::delete('/tags/{tag}', 'destroy')->name('update.tag');
-
     });
 
 

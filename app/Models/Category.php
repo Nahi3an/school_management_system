@@ -15,4 +15,11 @@ class Category extends Model
         'category_name',
         'category_image'
     ];
+
+    
+    //Many to Many
+    public function courses(){
+
+        return $this->hasMany(Course::class);
+    }
 }
