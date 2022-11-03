@@ -42,6 +42,8 @@ Route::middleware(['teacher.auth'])->group(function () {
 
         Route::get('/courses/create','create')->name('add.course');
         Route::post('/courses/store','store')->name('new.course');
+        Route::get('/courses','index')->name('all.course');
+
 
 
     });

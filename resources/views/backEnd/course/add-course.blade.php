@@ -17,15 +17,16 @@
                             <thead>
                                 <tr>
                                     <th>sl No.</th>
-                                    <th>Name</th>
-                                    <th>Phone</th>
-                                    <th>Email</th>
-                                    <th>Address</th>
-                                    <th>Image</th>
-                                    <th>Status</th>
+                                    <th>Course Title</th>
+                                    <th>Course Category</th>
+                                    <th>Course Description</th>
+                                    <th>Course Requirements</th>
+                                    <th>Course Image</th>
+                                    <th>Course Instructor</th>
+                                    <th>Course Tags</th>
+                                    <th>Slug</th>
+                                    <th>Price</th>
                                     <th>Action</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
 
                                 </tr>
 
@@ -68,8 +69,8 @@
 
                 <h6 class="mb-0 text-uppercase">Add Course Information</h6>
                 <hr />
-                <form method="POST" action="{{ route('new.course') }}" enctype="multipart/form-data">
-                    @csrf
+                <form id="addCourseForm" enctype="multipart/form-data">
+
                     <div id="addCourseErrorCard">
                     </div>
                     <div class="card">
@@ -80,7 +81,8 @@
                                 </div>
                                 <hr />
 
-                                <input type="hidden" id="teacherId" name="teacher_id" value="{{ Session::get('teacherId') }}">
+                                <input type="hidden" id="teacherId" name="teacher_id"
+                                    value="{{ Session::get('teacherId') }}">
                                 <div class="row mb-3">
                                     <label for="inputEnterYourName" class="col-sm-3 col-form-label">Course Category
                                     </label>
@@ -95,13 +97,15 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="form-check-label col-sm-3 col-form-label" for="flexCheckDefault">Select Tags
+                                    <label class="form-check-label col-sm-3 col-form-label" for="flexCheckDefault">Select
+                                        Tags
                                     </label>
 
                                     <div class="col-sm-9">
                                         @foreach ($tags as $tag)
                                             <input class="form-check-input" type="checkbox" value="{{ $tag->id }}"
-                                                 name="tag_names[]"><label class="form-check-label" >{{ $tag->tag_name }}</label>
+                                                style="margin-right: 5px" name="tags[]"><label
+                                                class="form-check-label">{{ $tag->tag_name }}</label>
                                         @endforeach
                                     </div>
                                 </div>
@@ -117,7 +121,16 @@
                                 <div class="row mb-3">
                                     <label for="inputAddress4" class="col-sm-3 col-form-label">Course Description</label>
                                     <div class="col-sm-9">
-                                        <textarea name="course_description" class="form-control" rows="3" placeholder="Address" name="address"></textarea>
+                                        <textarea name="course_description" id="editorCourseDescription" class="form-control"
+                                            placeholder="Enter Course Description"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label for="inputAddress4" class="col-sm-3 col-form-label">Course Requirements</label>
+                                    <div class="col-sm-9">
+                                        <textarea name="course_requirement" id="editorCourseRequirement" class="form-control"
+                                            placeholder="Enter Course Requirements"></textarea>
                                     </div>
                                 </div>
 
@@ -145,7 +158,7 @@
                                 <div class="row">
                                     <label class="col-sm-3 col-form-label"></label>
                                     <div class="col-sm-9">
-                                        <button type="submit" id="addCourseBtn" class="btn btn-primary px-5">Add
+                                        <button type="submit" id="addCourseBtn" class="btn btn-sm btn-primary px-5">Add
                                             Course</button>
                                     </div>
                                 </div>
@@ -161,12 +174,68 @@
 @endsection
 
 @section('scripts')
-
     <script>
+        $(document).ready(function() {
 
-        $(document).ready(function () {
+            //All Course
 
-            $(document).on('submit','#addCourseForm', function (e) {
+            fetchCourses();
+
+            function fetchCourses() {
+
+                $.ajax({
+                    type: "GET",
+                    url: "/courses",
+                    dataType: "json",
+                    success: function(response) {
+
+                        console.log(response.courseTags);
+
+                        $("#courseTable").html("");
+
+                        $.each(response.courses, function(key, item) {
+
+                            let courseTag = "";
+
+                            $.each(response.courseTags[key], function(key, tag) {
+
+                                courseTag = courseTag  + tag.tag_name + " ";
+
+                            });
+                            console.log(courseTag);
+
+
+                            $("#courseTable").append(
+                                '<tr>\
+                                            <td>' + (key + 1) + '</td>\
+                                            <td>' + item.course_title + '</td>\
+                                            <td>' + item.category_name + '</td>\
+                                            <td>' + item.course_description + '</td>\
+                                            <td>' + item.course_requirements + '</td>\
+                                            <td><img src="../' + item.course_image + '"style="height:80px; width:80px; "></td>\
+                                            <td>' + item.teacher_name + '</td>\
+                                            <td>' + courseTag + '</td>\
+                                            <td>' + item.slug + '</td>\
+                                            <td>' + item.course_price + '</td>\
+                                            <td>\
+                                               <button value=' + item.id +
+                                ' type="button" class="editCourseBtn btn btn-sm btn-info">Edit</button><button value=' +
+                                item.id + ' type="button" class="deleteCourseBtn btn btn-sm btn-danger">Delete</button>\
+                                            </td>\
+                                         </tr>');
+
+                            //data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        });
+
+                    }
+                });
+
+
+            }
+
+
+            //Add Course
+            $(document).on('submit', '#addCourseForm', function(e) {
 
                 e.preventDefault();
 
@@ -179,21 +248,58 @@
                 });
 
                 $.ajax({
-
                     type: "POST",
                     url: "/courses/store",
                     data: formData,
                     dataType: "json",
                     contentType: false,
                     processData: false,
-                    success: function (response) {
+                    success: function(response) {
 
-                        console.log(response);
+                        if (response.status == 200) {
+
+
+                            $("#addCourseErrorCard").html("");
+                            $("#addCourseErrorCard").removeClass("card bg-danger");
+                            $("#addCourseErrorCard").append(
+                                "<div class='alert border-0 bg-light-success alert-dismissible fade show py-2'><div class='d-flex align-items-center'><div class='fs-3 text-success'><i class='bi bi-check-circle-fill'></i></div><div class='ms-3'><div class='text-success'>" +
+                                response.message +
+                                "</div></div></div> <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>"
+                            );
+
+                            //After submit Emptying input
+                            $("#addCourseForm").find("input").val("");
+                            $("#addCourseForm").find("textarea").val("");
+
+                            //fetchTeachers();
+
+
+
+                        } else {
+
+
+                            $("#addCourseErrorCard").html("");
+                            $("#addCourseErrorCard").addClass("card bg-danger");
+                            $("#addCourseErrorCard").append(
+                                "<div id='addCourseErrorCardBody' class='card-body'></div>"
+                            );
+                            $("#addCourseErrorCardBody").append(
+                                "<ul id='addCourseErrorList' class='list-group list-group-flush'></ul>"
+                            )
+
+
+                            $.each(response.errors, function(key, err_values) {
+                                $('#addCourseErrorList').append(
+                                    "<li class='list-group-item bg-transparent text-white'>" +
+                                    err_values + '</li>')
+                            });
+
+
+                        }
                     }
                 });
 
             });
         });
     </script>
-
 @endsection

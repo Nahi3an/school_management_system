@@ -93,7 +93,22 @@
         new PerfectScrollbar(".best-product")
         new PerfectScrollbar(".top-sellers-list")
     </script>
+     <script src="{{ asset('adminAsset/ck_editor/ckeditor.js') }}"></script>
+     <script>
+         ClassicEditor
+             .create(document.getElementById("editorCourseDescription"))
+             .catch(error => {
+                 console.error(error);
+             });
+
+        ClassicEditor
+        .create(document.getElementById("editorCourseRequirement"))
+        .catch(error => {
+            console.error(error);
+        });
+     </script>
     @yield('scripts')
+
 
 </body>
 

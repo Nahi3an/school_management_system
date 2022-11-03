@@ -16,6 +16,7 @@ class Course extends Model
         'category_id',
         'course_title',
         'course_description',
+        'course_requirements',
         'slug',
         'course_image',
         'course_price',
